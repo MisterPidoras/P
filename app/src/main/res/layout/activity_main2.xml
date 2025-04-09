@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:textAlignment="center"
+    tools:context=".MainActivity2">
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="556dp"
+        android:layout_height="841dp"
+        app:srcCompat="@drawable/young_adult_male"
+        tools:layout_editor_absoluteX="-73dp"
+        tools:layout_editor_absoluteY="-67dp" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/rectangle"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="53dp" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="343dp"
+        android:layout_height="104dp"
+        android:layout_marginTop="532dp"
+        android:fontFamily="@font/urbanist_bold"
+        android:text="You can teach english by good histoey in this application"
+        android:textAlignment="center"
+        android:textColor="#D1CFCF"
+        android:textSize="24sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="30dp" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="351dp"
+        android:layout_height="57dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#494159"
+        android:insetTop="0dp"
+        android:text="Go inside"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="30dp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="492dp"
+        android:fontFamily="@font/urbanist_bold"
+        android:text="Welcome to NowEnglish"
+        android:textColor="#D1CFCF"
+        android:textSize="24sp"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="77dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
