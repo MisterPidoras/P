@@ -12,6 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.P"
         tools:targetApi="31">
+
+        <activity
+            android:name=".HistoryAfterClick"
+            android:exported="false"
+            android:parentActivityName=".MainActivity"/>
+
+        <activity
+            android:name=".MainActivity3"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

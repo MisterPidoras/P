@@ -1,8 +1,11 @@
 package com.example.p.model;
 
-public class history {
+
+import java.io.Serializable;
+
+public class history implements Serializable { // Добавлен интерфейс
     private final String name;
-    private final String img; // Should match drawable resource names
+    private final String img;
     private final String Desc;
     private final String hard;
     private final int id;
@@ -15,7 +18,7 @@ public class history {
         this.id = id;
     }
 
-    // Getters
+    // Геттеры
     public String getName() { return name; }
     public String getImg() { return img; }
     public String getDesc() { return Desc; }

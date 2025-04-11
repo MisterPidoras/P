@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">BestandTop</string>
+    <string name="image_description">Иллюстрация события</string>
 </resources>

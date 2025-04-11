@@ -6,22 +6,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.p.R;
 import com.example.p.model.history;
-
 import java.util.List;
 
 public class vbAdapter extends RecyclerView.Adapter<vbAdapter.vbHolder> {
     private final List<history> vbs;
     private final Context context;
+    private final OnItemClickListener listener;
 
-    public vbAdapter(List<history> vbs, Context context) {
+    public interface OnItemClickListener {
+        void onItemClick(history item);
+    }
+
+    public vbAdapter(List<history> vbs, Context context, OnItemClickListener listener) {
         this.vbs = vbs;
         this.context = context;
+        this.listener = listener;
     }
 
     @NonNull
@@ -38,18 +41,21 @@ public class vbAdapter extends RecyclerView.Adapter<vbAdapter.vbHolder> {
         holder.harrd.setText(item.getHard());
         holder.desc.setText(item.getDesc());
 
-        // Load image from drawable if path matches
+        // Загрузка изображения
         if (item.getImg() != null) {
             int resId = context.getResources()
                     .getIdentifier(item.getImg(), "drawable", context.getPackageName());
-            if (resId != 0) {
-                holder.img.setImageResource(resId);
-            }
+            if (resId != 0) holder.img.setImageResource(resId);
         }
+
+        // Обработка кликов
+        holder.itemView.setOnClickListener(v -> listener.onItemClick(item));
     }
 
     @Override
-    public int getItemCount() { return vbs.size(); }
+    public int getItemCount() {
+        return vbs.size();
+    }
 
     static class vbHolder extends RecyclerView.ViewHolder {
         TextView historyname, desc, harrd;
