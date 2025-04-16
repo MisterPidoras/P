@@ -76,7 +76,7 @@
         android:id="@+id/button3"
         android:layout_width="170dp"
         android:layout_height="43dp"
-        android:layout_marginStart="280dp"
+        android:layout_marginStart="252dp"
         android:layout_marginTop="4dp"
         android:background="#00FFFFFF"
         android:text="Continue without reg"
