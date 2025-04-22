@@ -1,8 +1,10 @@
 package com.example.p;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,12 +34,10 @@ public class HistoryAfterClick extends AppCompatActivity {
             // Настройка элементов интерфейса
             TextView tvTitle = findViewById(R.id.tvTitle);
             TextView tvDifficulty = findViewById(R.id.tvDifficulty);
-            TextView tvDescription = findViewById(R.id.tvDescription);
             ImageView imageView = findViewById(R.id.imageView);
 
             tvTitle.setText(item.getName());
             tvDifficulty.setText("Сложность: " + item.getHard());
-            tvDescription.setText(item.getDesc());
 
             // Загрузка изображения
             int resId = getResources().getIdentifier(
@@ -47,6 +47,10 @@ public class HistoryAfterClick extends AppCompatActivity {
             );
             if (resId != 0) imageView.setImageResource(resId);
         }
+        Button button = findViewById(R.id.button5);
+        button.setOnClickListener(v -> {
+            Intent intent1 = new Intent(HistoryAfterClick.this, MainActivity4.class);
+            startActivity(intent1);});
 
         // Скрытие системных баров при касании
         findViewById(android.R.id.content).setOnClickListener(v -> {
@@ -60,4 +64,5 @@ public class HistoryAfterClick extends AppCompatActivity {
             );
         });
     }
+
 }
