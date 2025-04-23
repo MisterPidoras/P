@@ -91,11 +91,11 @@ public class MainActivity4 extends AppCompatActivity {
         dialog.setOnShowListener(d -> {
             Button okButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
             okButton.setOnClickListener(v -> {
-                if (input.getText().toString().equals("42")) {
+                if (input.getText().toString().equals("Камень")) {
                     dialog.dismiss();
                 } else {
                     error.setVisibility(View.VISIBLE);
-                    error.setText("Неверно! Ответ: 42");
+                    error.setText("Неверно");
                 }
             });
         });
