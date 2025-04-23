@@ -4,11 +4,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
-
+import android.widget.RelativeLayout;
 public class MainActivity4 extends AppCompatActivity {
 
     private TextView textView;
@@ -17,6 +18,7 @@ public class MainActivity4 extends AppCompatActivity {
     private String[] texts = {
             "Это первый текст",
             "Это второй текст",
+            "Это третий текст",
             "Это третий текст",
             "Это четвертый текст",
             "Это пятый текст"
@@ -62,9 +64,18 @@ public class MainActivity4 extends AppCompatActivity {
         ImageView imageView = findViewById(R.id.circle1);
         if (currentPosition==2) {
             imageView.setVisibility(View.VISIBLE);
-            showCustomDialog();// Показываем
         } else {
             imageView.setVisibility(View.GONE); // Скрываем
+        }
+        if (currentPosition == 3) {
+            imageView.setVisibility(View.VISIBLE);
+            showCustomDialog();
+        }
+        if (currentPosition == 5){
+            changeBackGround(R.drawable.img_1);
+        }
+        else {
+            changeBackGround(R.drawable.img);
         }
     }
     private void updateText() {
@@ -76,6 +87,7 @@ public class MainActivity4 extends AppCompatActivity {
     }
     void showCustomDialog() {
         // Надуваем наш XML
+        ImageView imageView = findViewById(R.id.circle1);
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_answer, null);
 
         AlertDialog dialog = new AlertDialog.Builder(this)
@@ -91,7 +103,8 @@ public class MainActivity4 extends AppCompatActivity {
         dialog.setOnShowListener(d -> {
             Button okButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
             okButton.setOnClickListener(v -> {
-                if (input.getText().toString().equals("Камень")) {
+                if (input.getText().toString().equals("sdf")) {
+                    imageView.setVisibility(View.GONE);
                     dialog.dismiss();
                 } else {
                     error.setVisibility(View.VISIBLE);
@@ -100,6 +113,11 @@ public class MainActivity4 extends AppCompatActivity {
             });
         });
 
+
         dialog.show();
+    }
+    private void changeBackGround(int Image){
+        RelativeLayout BackGround = findViewById(R.id.BackG);
+        BackGround.setBackgroundResource(Image);
     }
 }
