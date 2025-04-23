@@ -23,6 +23,10 @@ public class MainActivity extends AppCompatActivity {
         listvb.add(new history("Haaaaawe 2", "rectangle", "Duncanue события 2", "Легко", 2));
 
         setupRecyclerView(listvb);
+        findViewById(R.id.settingsButton).setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, activity_settings.class);
+            startActivity(intent);
+        });
     }
 
     private void setupRecyclerView(List<history> items) {

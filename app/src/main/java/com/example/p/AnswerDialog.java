@@ -17,16 +17,10 @@ public class AnswerDialog extends Dialog {
         super(context);
         this.correctAnswer = correctAnswer;
         setContentView(R.layout.dialog_answer);
-        setupViews();
+
     }
 
-    private void setupViews() {
-        answerInput = findViewById(R.id.answer_input);
-        errorText = findViewById(R.id.error_text);
-        Button submitButton = findViewById(R.id.submit_button);
 
-        submitButton.setOnClickListener(v -> checkAnswer());
-    }
 
     private void checkAnswer() {
         String userAnswer = answerInput.getText().toString().trim();
