@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <!-- Прозрачная заливка -->
+    <solid android:color="@android:color/transparent" />
+
+    <!-- Красная граница -->
+    <stroke
+        android:width="4dp"
+        android:color="#FF0000" />
+
+    <!-- Размеры круга -->
+    <size
+        android:width="100dp"
+        android:height="100dp" />
+</shape>

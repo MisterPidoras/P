@@ -116,6 +116,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="40dp"
         android:background="@android:color/transparent"
+        android:onClick="onc"
         android:text="Continue without registration"
         android:textColor="#5F5252"
         app:layout_constraintBottom_toBottomOf="parent"

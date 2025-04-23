@@ -15,9 +15,9 @@
 
         <activity
             android:name=".HistoryAfterClick"
-            android:exported="false"
-            android:parentActivityName=".MainActivity"/>
-
+            android:exported="false"/>
+        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity4" />
         <activity
             android:name=".MainActivity3"
             android:exported="false" />
