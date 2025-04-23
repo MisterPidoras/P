@@ -8,15 +8,16 @@
     tools:context=".HistoryAfterClick">
 
     <!-- Изображение на весь экран -->
+
+    <!-- Карточка с боковыми отступами и прижатием к низу -->
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
         android:contentDescription="image_description"
+        android:scaleType="centerCrop"
         app:srcCompat="@drawable/young_adult_male" />
 
-    <!-- Карточка с боковыми отступами и прижатием к низу -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -59,6 +60,12 @@
                 android:text="description_placeholder"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/button5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Button" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

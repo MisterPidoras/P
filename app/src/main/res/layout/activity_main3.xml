@@ -5,83 +5,121 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:backgroundTint="#1B1919"
-    tools:context=".MainActivity3">
+    android:background="#1B1919"
+    tools:context=".RegistrationActivity">
 
+    <!-- Welcome Title -->
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="175dp"
-        android:layout_marginTop="108dp"
-        android:layout_marginEnd="178dp"
+        android:layout_marginTop="80dp"
+        android:text="Welcome to NowEnglish"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
         android:fontFamily="@font/urbanist_bold"
-        android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.55"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Log in" />
-
-    <EditText
-        android:id="@+id/editTextText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="56dp"
-        android:layout_marginEnd="101dp"
-        android:ems="10"
-        android:inputType="text"
-        android:text="Name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
-    <EditText
-        android:id="@+id/editTextText2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="52dp"
-        android:layout_marginEnd="101dp"
-        android:ems="10"
-        android:inputType="text"
-        android:text="Name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.52"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText" />
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        tools:layout_editor_absoluteX="173dp"
-        tools:layout_editor_absoluteY="374dp" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="90dp"
-        android:layout_height="41dp"
-        android:layout_marginStart="172dp"
-        android:layout_marginTop="8dp"
-        android:background="#00FFFFFF"
-        android:text="Reg"
-        android:textColor="#5F5252"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText2" />
-
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="170dp"
-        android:layout_height="43dp"
-        android:layout_marginStart="252dp"
-        android:layout_marginTop="4dp"
-        android:background="#00FFFFFF"
-        android:text="Continue without reg"
-        android:textColor="#000000"
-        android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Subtitle -->
+    <TextView
+        android:id="@+id/subtitleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Join us to teach English with history"
+        android:textColor="#A8A8A8"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
+
+    <!-- Name Field -->
+    <EditText
+        android:id="@+id/nameEditText"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/edit_text_background"
+        android:hint="Full Name"
+        android:inputType="textPersonName"
+        android:paddingStart="16dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#A8A8A8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/subtitleTextView" />
+
+    <!-- Email Field -->
+    <EditText
+        android:id="@+id/emailEditText"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/edit_text_background"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:paddingStart="16dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#A8A8A8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nameEditText" />
+
+    <!-- Password Field -->
+    <EditText
+        android:id="@+id/passwordEditText"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/edit_text_background"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:paddingStart="16dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#A8A8A8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/emailEditText" />
+
+    <!-- Register Button -->
+    <Button
+        android:id="@+id/registerButton"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="40dp"
+        android:background="#4CAF50"
+        android:text="Register"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordEditText" />
+
+    <!-- Login Link -->
+    <TextView
+        android:id="@+id/loginTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Already have an account? Login"
+        android:textColor="#A8A8A8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/registerButton" />
+
+    <!-- Continue Without Registration -->
+    <Button
+        android:id="@+id/continueButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:background="@android:color/transparent"
+        android:text="Continue without registration"
+        android:textColor="#5F5252"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
