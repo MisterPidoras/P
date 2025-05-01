@@ -1,5 +1,6 @@
 package com.example.p;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,9 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         List<history> listvb = new ArrayList<>();
@@ -24,7 +27,11 @@ public class MainActivity extends AppCompatActivity {
 
         setupRecyclerView(listvb);
         findViewById(R.id.settingsButton).setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, activity_settings.class);
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
+        });
+        findViewById(R.id.settingsButton2).setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, SaveWord.class);
             startActivity(intent);
         });
     }

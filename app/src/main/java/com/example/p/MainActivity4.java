@@ -10,8 +10,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
 public class MainActivity4 extends AppCompatActivity {
 
@@ -65,14 +63,13 @@ public class MainActivity4 extends AppCompatActivity {
     }
     private void check(){
         ImageView imageView = findViewById(R.id.circle1);
-        Animation pulseAnimation = AnimationUtils.loadAnimation(this, R.anim.pulse);
         if (currentPosition==2) {
-            imageView.startAnimation(pulseAnimation);
+            imageView.setVisibility(View.VISIBLE);
         } else {
-            imageView.clearAnimation(); // Скрываем
+            imageView.setVisibility(View.GONE); // Скрываем
         }
         if (currentPosition == 3) {
-            imageView.startAnimation(pulseAnimation);
+            imageView.setVisibility(View.VISIBLE);
             showCustomDialog();
         }
         if (currentPosition == 5){
@@ -108,6 +105,7 @@ public class MainActivity4 extends AppCompatActivity {
             Button okButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
             okButton.setOnClickListener(v -> {
                 if (input.getText().toString().equals("sdf")) {
+                    imageView.setVisibility(View.GONE);
                     dialog.dismiss();
                 } else {
                     error.setVisibility(View.VISIBLE);

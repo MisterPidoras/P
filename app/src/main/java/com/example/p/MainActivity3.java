@@ -3,35 +3,52 @@ package com.example.p;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+import com.example.p.utils.UserManager;
 
 public class MainActivity3 extends AppCompatActivity {
+    private EditText etUsername, etPassword;
+    private UserManager userManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main3);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-    }
-    public void onc(View v){
-        Intent f = new Intent(MainActivity3.this,MainActivity.class);
-        startActivity(f);
 
-    }
-    public void onc2(View v){
-        Intent f = new Intent(MainActivity3.this,MainActivity5.class);
-        startActivity(f);
-
+        userManager = new UserManager(this);
+        etUsername = findViewById(R.id.emailEditText);
+        etPassword = findViewById(R.id.passwordEditText);
     }
 
+    public void onRegisterClick(View v) {
+        String username = etUsername.getText().toString().trim();
+        String password = etPassword.getText().toString().trim();
+
+        if (username.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Заполните все поля", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (userManager.registerUser(username, password)) {
+            Toast.makeText(this, "Регистрация успешна", Toast.LENGTH_SHORT).show();
+            userManager.loginUser(username, password);
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        } else {
+            Toast.makeText(this, "Пользователь уже существует", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void onc2(View v) {
+        startActivity(new Intent(this, MainActivity5.class));
+
+    }
+    public void onc(View v) {
+        startActivity(new Intent(this, MainActivity.class));
+
+    }
 }
