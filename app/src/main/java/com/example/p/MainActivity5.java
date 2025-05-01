@@ -3,43 +3,51 @@ package com.example.p;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+import com.example.p.utils.UserManager;
 
 public class MainActivity5 extends AppCompatActivity {
+    private EditText etUsername, etPassword;
+    private UserManager userManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main5);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-    }
 
-    public void onc(View v) {
-        // Continue without login
-        Intent f = new Intent(MainActivity5.this, MainActivity.class);
-        startActivity(f);
-    }
+        userManager = new UserManager(this);
+        etUsername = findViewById(R.id.emailEditText);
+        etPassword = findViewById(R.id.passwordEditText);
 
-    public void onRegisterClick(View v) {
-        // Go to registration screen
-        Intent f = new Intent(MainActivity5.this, MainActivity3.class);
-        startActivity(f);
+        // Если пользователь уже авторизован, перенаправляем его
+        if (userManager.getCurrentUser() != null) {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        }
     }
 
     public void onLoginClick(View v) {
-        // Handle login logic here
-        // After successful login:
-        // Intent f = new Intent(LoginActivity.this, MainActivity.class);
-        // startActivity(f);
+        String username = etUsername.getText().toString().trim();
+        String password = etPassword.getText().toString().trim();
+
+        if (username.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Заполните все поля", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (userManager.loginUser(username, password)) {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        } else {
+            Toast.makeText(this, "Неверные данные", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void onRegisterClick(View v) {
+        startActivity(new Intent(this, MainActivity3.class));
     }
 }
