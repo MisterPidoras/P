@@ -16,8 +16,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:hint="@string/app_name"
-        android:inputType="text"
+        android:hint="@string/hint_text"
+        android:inputType="textCapSentences|textAutoCorrect"
+        android:imeOptions="actionDone"
         android:minHeight="48dp" />
 
     <TextView
