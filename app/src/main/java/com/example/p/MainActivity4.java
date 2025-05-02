@@ -16,8 +16,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.text.InputType;
 import android.view.WindowManager;
 import android.content.Context;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.TransitionDrawable;
+
 public class MainActivity4 extends AppCompatActivity {
 
     private TextView textView;
@@ -25,28 +26,44 @@ public class MainActivity4 extends AppCompatActivity {
 
     private String[] texts = {
             "Очнувшись передо мной был хвойный forest,через который шла тропинка.",
+            "Очнувшись передо мной был хвойный forest,через который шла тропинка.",
             "Осмотревшись я решил пройти в глубь по тропинке через forest.",
             "Спустя 10 минут я вышел на тропинку выложенную камнями.",
             "По ее бокам находились достаточно масивные stones",
+            "По ее бокам находились достаточно масивные stones",
+            "Услышав шорох я решил подойти к одному из них,за ним был rabbit",
             "Услышав шорох я решил подойти к одному из них,за ним был rabbit",
             "Но увидев меня он сразу начал убегать и вскоре испарился в глубине forest",
             "Насладившись видом данного forest я продолжил путь",
             "Пройдя около одного киллометра я вышел на village",
+            "Пройдя около одного киллометра я вышел на village",
             "Данная village была небольшая,но выглядила словно из сказки",
             "Возле нее протекала river и на фоне заката это выглядило особо прекрасно",
+            "Возле нее протекала river и на фоне заката это выглядило особо прекрасно",
+            "По бокам тропинке к village росли trees с пышными кронами",
             "По бокам тропинке к village росли trees с пышными кронами",
             "Осмотрев village из далека,я пошел к houses,чтобы попросится остаться на ночлег",
+            "Осмотрев village из далека,я пошел к houses,чтобы попросится остаться на ночлег",
+            "Встав перед одним из house и осмотрев его.Я постучал в door.",
             "Встав перед одним из house и осмотрев его.Я постучал в door.",
             "Сразу после стуков,начали раздаваться отчетливые  шаги в house.",
             "После со скрипом отворилась door и передомной появился силуэт мужчины.",
             "Он был явно удивлен моему apperance.Не став ждать моих слов он сказал:'Что тебе надо?'",
+            "Он был явно удивлен моему apperance.Не став ждать моих слов он сказал:'Что тебе надо?'",
+            "Ответив,что я путник и мне нужен ночлег на одну night.Он впустил меня внутрь",
             "Ответив,что я путник и мне нужен ночлег на одну night.Он впустил меня внутрь",
             "Оказавшись внутри перед моими глазами появился table с едой.Владелец предложил поесть после дороги.",
+            "Оказавшись внутри перед моими глазами появился table с едой.Владелец предложил поесть после дороги.",
+            "Я не стал отказыватсья и сел за table.И поблагодарив его за food начал есть",
             "Я не стал отказыватсья и сел за table.И поблагодарив его за food начал есть",
             "После dinner владелец провел меня до комнаты,в которой я могу переночевать",
+            "После dinner владелец провел меня до комнаты,в которой я могу переночевать",
             "Войдя в нее можно было заметить,что не в ней давно никто не живет,но она была довольно чистой",
-            "В ней в углу стояла bed,а возле нее тумбочка,на ней стояла лампа,также было окно с видом на реку",
+            "В ней в углу стояла bed,а возле нее тумбочка,на ней стояла лампа,также было окно с видом на river",
+            "В ней в углу стояла bed,а возле нее тумбочка,на ней стояла лампа,также было окно с видом на river",
             "В другом углу стоял достаточно большой closet,он был закрыт.",
+            "В другом углу стоял достаточно большой closet,он был закрыт.",
+            "Осмотрев room я сразу лег спать",
             "Осмотрев room я сразу лег спать"
     };
     private String[] otveti={
@@ -91,22 +108,41 @@ public class MainActivity4 extends AppCompatActivity {
         });
     }
     private void check(){
-        ImageView imageView = findViewById(R.id.circle1);
-        if (currentPosition==2) {
-            imageView.setVisibility(View.VISIBLE);
-        } else {
-            imageView.setVisibility(View.GONE); // Скрываем
-        }
-        if (currentPosition == 3) {
-            imageView.setVisibility(View.VISIBLE);
+        RelativeLayout backGround = findViewById(R.id.BackG);
+        if (currentPosition==1 || currentPosition==5 || currentPosition==7|| currentPosition==11 || currentPosition==14
+                || currentPosition==16 || currentPosition==18 || currentPosition==20 || currentPosition==24 || currentPosition==26 || currentPosition==28
+                || currentPosition==30 || currentPosition==32 || currentPosition==35 || currentPosition==37 || currentPosition==39){
             showCustomDialog();
         }
-        if (currentPosition == 5){
-            changeBackGround(R.drawable.img_1);
+        if ((currentPosition==3) || (currentPosition>7 && currentPosition<=9)){
+            changeBackGround(R.drawable.tropinkakamni,backGround);
         }
-        else {
-            changeBackGround(R.drawable.img);
+        if (currentPosition==4){
+            changeBackGround(R.drawable.stoneszoom,backGround);
+
         }
+        if (currentPosition==6){
+            changeBackGround(R.drawable.rabbit,backGround);
+        }
+        if (currentPosition==10){
+            changeBackGround(R.drawable.village,backGround);
+        }
+        if (currentPosition==10){
+            changeBackGround(R.drawable.village,backGround);
+        }
+        if (currentPosition==17){
+            changeBackGround(R.drawable.house,backGround);
+        }
+        if (currentPosition==22){
+            changeBackGround(R.drawable.chelovekidom,backGround);
+        }
+        if (currentPosition==27){
+            changeBackGround(R.drawable.food,backGround);
+        }
+        if (currentPosition==31){
+            changeBackGround(R.drawable.room,backGround);
+        }
+
     }
     private void updateText() {
         textView.setText(texts[currentPosition]);
@@ -118,7 +154,6 @@ public class MainActivity4 extends AppCompatActivity {
     void showCustomDialog() {
         // Надуваем наш XML
 
-        ImageView imageView = findViewById(R.id.circle1);
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_answer, null);
 
         AlertDialog dialog = new AlertDialog.Builder(this)
@@ -147,7 +182,6 @@ public class MainActivity4 extends AppCompatActivity {
 
                 if (userInput.equals(otveti[currentAnswer])) { // Замените на ваш правильный ответ
                     currentAnswer++;
-                    imageView.setVisibility(View.GONE);
                     dialog.dismiss();
                 } else {
                     error.setVisibility(View.VISIBLE);
@@ -181,8 +215,29 @@ public class MainActivity4 extends AppCompatActivity {
                     WindowManager.LayoutParams.WRAP_CONTENT);
         }
     }
-    private void changeBackGround(int Image){
-        RelativeLayout BackGround = findViewById(R.id.BackG);
-        BackGround.setBackgroundResource(Image);
-    }
-}
+    private void changeBackGround(int Image,View targetView){
+            // Получаем текущий и новый фоны
+            Drawable currentDrawable = targetView.getBackground();
+            Drawable newDrawable = targetView.getContext().getResources().getDrawable(Image);
+
+            // Проверка на null для текущего фона
+            if (currentDrawable == null) {
+                // Если фона нет, просто устанавливаем новый
+                targetView.setBackground(newDrawable);
+                return;
+            }
+
+            // Создаем TransitionDrawable
+            Drawable[] layers = new Drawable[] {
+                    currentDrawable,
+                    newDrawable
+            };
+
+            TransitionDrawable transition = new TransitionDrawable(layers);
+
+            // Устанавливаем переход как новый фон
+            targetView.setBackground(transition);
+
+            // Запускаем анимацию (500 мс - стандартное время)
+            transition.startTransition(500);
+        }}
