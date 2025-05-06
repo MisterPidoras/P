@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.p.R;
@@ -48,8 +50,23 @@ public class vbAdapter extends RecyclerView.Adapter<vbAdapter.vbHolder> {
             if (resId != 0) holder.img.setImageResource(resId);
         }
 
+        holder.itemView.setAlpha(item.isLocked() ? 0.5f : 1.0f);
+
+        if (item.isLocked()) {
+            holder.lockIcon.setVisibility(View.VISIBLE);
+        } else {
+            holder.lockIcon.setVisibility(View.GONE);
+        }
+
         // Обработка кликов
-        holder.itemView.setOnClickListener(v -> listener.onItemClick(item));
+        holder.itemView.setOnClickListener(v -> {
+            if (item.isLocked()) {
+                Toast.makeText(context, "Сначала подумай", Toast.LENGTH_SHORT).show();
+            } else {
+                listener.onItemClick(item);
+            }
+        });
+
     }
 
     @Override
@@ -60,6 +77,7 @@ public class vbAdapter extends RecyclerView.Adapter<vbAdapter.vbHolder> {
     static class vbHolder extends RecyclerView.ViewHolder {
         TextView historyname, desc, harrd;
         ImageView img;
+        ImageView lockIcon;
 
         public vbHolder(@NonNull View itemView) {
             super(itemView);
@@ -67,6 +85,7 @@ public class vbAdapter extends RecyclerView.Adapter<vbAdapter.vbHolder> {
             desc = itemView.findViewById(R.id.d2);
             harrd = itemView.findViewById(R.id.d3);
             img = itemView.findViewById(R.id.imageVw);
-        }
+            lockIcon = itemView.findViewById(R.id.lock_icon);
+            }
     }
 }

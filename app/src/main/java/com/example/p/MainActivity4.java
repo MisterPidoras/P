@@ -1,26 +1,30 @@
 package com.example.p;
 
 import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.TransitionDrawable;
+import android.os.Bundle;
+import android.text.InputType;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
-import android.widget.ImageView;
-import android.view.Window;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.text.InputType;
-import android.view.WindowManager;
-import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.TransitionDrawable;
-import android.content.SharedPreferences;
-import android.content.Intent;
 
 import com.example.p.utils.UserManager;
 
@@ -91,7 +95,11 @@ public class MainActivity4 extends AppCompatActivity {
     private int currentAnswer = 0;
     private static final String SAVED_POSITION_KEY = "saved_position";
     private static final String SAVED_ANSWER_KEY = "saved_answer";
-
+    private static final String HEARTS_COUNT_KEY = "hearts_count";
+    private static final String UNLOCKED_STORIES_KEY = "unlocked_stories";
+    private int heartsCount = 3;
+    private ImageView[] heartViews = new ImageView[3];
+    private TextView heartsInfoText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,7 +126,9 @@ public class MainActivity4 extends AppCompatActivity {
             currentPosition = sharedPreferences.getInt(SAVED_POSITION_KEY, 0);
             currentAnswer = sharedPreferences.getInt(SAVED_ANSWER_KEY, 0);
         }
-
+        initHearts();
+        heartsCount = sharedPreferences.getInt(HEARTS_COUNT_KEY + currentUserKey, 3);
+        updateHeartsDisplay();
         // Устанавливаем начальный текст
         updateText();
 
@@ -155,7 +165,7 @@ public class MainActivity4 extends AppCompatActivity {
     }
 
     // Метод для создания Intent с текущей позицией
-    public static Intent createIntent(Context context, int currentPosition, int currentAnswer) {
+    public Intent createIntent(Context context, int currentPosition, int currentAnswer) {
         Intent intent = new Intent(context, MainActivity4.class);
         intent.putExtra(SAVED_POSITION_KEY, currentPosition);
         intent.putExtra(SAVED_ANSWER_KEY, currentAnswer);
@@ -169,6 +179,7 @@ public class MainActivity4 extends AppCompatActivity {
                 || currentPosition==30 || currentPosition==32 || currentPosition==35 || currentPosition==37 || currentPosition==39){
             showCustomDialog();
         }
+
         if ((currentPosition==3) || (currentPosition>7 && currentPosition<=9)){
             changeBackGround(R.drawable.tropinkakamni,backGround);
         }
@@ -192,6 +203,15 @@ public class MainActivity4 extends AppCompatActivity {
         }
         if (currentPosition==31){
             changeBackGround(R.drawable.room,backGround);
+
+        }
+        if (currentPosition == texts.length - 1) {
+            boolean success = heartsCount > 0;
+            onStoryCompleted(success);
+
+            if(!success) {
+                Toast.makeText(this, "История перезапущена", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -231,8 +251,17 @@ public class MainActivity4 extends AppCompatActivity {
 
                     currentAnswer++;
                     saveCurrentPosition();
-                    dialog.dismiss();
+                    dialog.dismiss(); // Закрываем диалог после правильного ответа
+
+                    // Продолжаем автоматически после правильного ответа
+                    if (currentPosition < texts.length - 1) {
+                        currentPosition++;
+                        updateText();
+                        check();
+                        saveCurrentPosition();
+                    }
                 } else {
+                    decreaseHearts();
                     error.setVisibility(View.VISIBLE);
                     error.setText("Неверно! Попробуйте ещё раз.");
                     error.animate()
@@ -285,5 +314,122 @@ public class MainActivity4 extends AppCompatActivity {
         TransitionDrawable transition = new TransitionDrawable(layers);
         targetView.setBackground(transition);
         transition.startTransition(500);
+    }
+    private void initHearts() {
+        LinearLayout heartsContainer = findViewById(R.id.heartsContainer);
+        heartsInfoText = findViewById(R.id.heartsInfoText);
+
+        // Если контейнер не найден в layout, нужно добавить его в XML
+        if (heartsContainer == null) {
+            // Создаем контейнер программно, если он не был добавлен в XML
+            heartsContainer = new LinearLayout(this);
+            heartsContainer.setId(R.id.heartsContainer);
+            heartsContainer.setOrientation(LinearLayout.HORIZONTAL);
+            heartsContainer.setGravity(Gravity.CENTER);
+
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT
+            );
+            params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+            params.topMargin = 16;
+
+            ((RelativeLayout) findViewById(R.id.BackG)).addView(heartsContainer, params);
+        }// Очищаем контейнер перед добавлением сердечек
+        heartsContainer.removeAllViews();
+
+        // Создаем ImageView для каждого сердца
+        for (int i = 0; i < 3; i++) {
+            ImageView heart = new ImageView(this);
+            heart.setLayoutParams(new LinearLayout.LayoutParams(
+                    dpToPx(24),
+                    dpToPx(24)
+            ));
+            heart.setImageResource(R.drawable.ic_heart);
+            heart.setTag(i);
+            heartsContainer.addView(heart);
+            heartViews[i] = heart;
+        }
+    }
+    private int dpToPx(int dp) {
+        return (int) (dp * getResources().getDisplayMetrics().density);
+    }
+
+    private void updateHeartsDisplay() {
+        for (int i = 0; i < heartViews.length; i++) {
+            heartViews[i].setVisibility(i < heartsCount ? View.VISIBLE : View.GONE);
+        }
+
+        if (heartsCount <= 0) {
+            heartsInfoText.setVisibility(View.VISIBLE);
+            heartsInfoText.setText("Вы в режиме просмотра. Чтобы открыть следующую историю, пройдите текущую, имея сердца.");
+
+            // Автоматически скрываем сообщение через 3 секунды
+            heartsInfoText.postDelayed(() -> {
+                if (heartsInfoText != null) {
+                    heartsInfoText.setVisibility(View.GONE);
+                }
+            }, 3000);
+
+            btnNext.setEnabled(false);
+        } else {
+            heartsInfoText.setVisibility(View.GONE);
+        }
+    }
+
+    private void decreaseHearts() {
+        if (heartsCount > 0) {
+            heartsCount--;
+            sharedPreferences.edit().putInt(HEARTS_COUNT_KEY + currentUserKey, heartsCount).apply();
+            updateHeartsDisplay();
+
+            if (heartsCount == 0) {
+                // Блокируем следующие истории
+                Set<String> unlockedStories = sharedPreferences.getStringSet(UNLOCKED_STORIES_KEY + currentUserKey, new HashSet<>());
+                unlockedStories.add("1"); // Только первая история разблокирована
+                sharedPreferences.edit().putStringSet(UNLOCKED_STORIES_KEY + currentUserKey, unlockedStories).apply();
+            }
+        }
+    }
+    private void unlockNextStory() {
+        // Используем тот же формат ключа, что и в MainActivity
+        String currentUserKey = "user_" + (new UserManager(this).getCurrentUser() != null ?
+                new UserManager(this).getCurrentUser() : "default");
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        // Разблокируем историю с ID 2
+        editor.putBoolean(currentUserKey + "_story_2_locked", false);
+        editor.apply();
+    }
+
+    // Вызывайте этот метод при успешном прохождении истории
+    private void onStoryCompleted(boolean success) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        // Всегда сбрасываем прогресс и сердца
+        heartsCount = 3;
+        currentPosition = 0;
+        currentAnswer = 0;
+
+        editor.putInt(HEARTS_COUNT_KEY + currentUserKey, heartsCount)
+                .putInt(SAVED_POSITION_KEY, currentPosition)
+                .putInt(SAVED_ANSWER_KEY, currentAnswer);
+
+        // Разблокируем следующую историю только при успешном завершении
+        if(success) {
+            unlockNextStory();
+            // Обновляем MainActivity
+            sendBroadcast(new Intent("UPDATE_STORIES"));
+            Toast.makeText(this, "Следующая история разблокирована!", Toast.LENGTH_SHORT).show();
+        }
+
+        editor.apply();
+
+        // Перезагружаем активность
+        Intent intent = new Intent(this, MainActivity4.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
 }

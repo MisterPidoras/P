@@ -8,7 +8,25 @@
     android:alpha="20"
     android:background="@drawable/forest"
     tools:context=".MainActivity4">
+    <TextView
+        android:id="@+id/heartsInfoText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/linearLayout"
+        android:layout_margin="16dp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:visibility="gone" />
 
+    <LinearLayout
+        android:id="@+id/heartsContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="26dp"
+        android:orientation="horizontal" />
 
     <LinearLayout
 
