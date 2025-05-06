@@ -1,4 +1,5 @@
 package com.example.p;
+
 import android.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,11 +19,19 @@ import android.view.WindowManager;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
+import android.content.SharedPreferences;
+
+import com.example.p.utils.UserManager;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class MainActivity4 extends AppCompatActivity {
 
     private TextView textView;
     private ImageButton btnNext, btnBack;
+    private SharedPreferences sharedPreferences;
+    private String currentUserKey;
 
     private String[] texts = {
             "Очнувшись передо мной был хвойный forest,через который шла тропинка.",
@@ -66,10 +75,17 @@ public class MainActivity4 extends AppCompatActivity {
             "Осмотрев room я сразу лег спать",
             "Осмотрев room я сразу лег спать"
     };
-    private String[] otveti={
+
+    private String[] otveti = {
             "лес","камни","заяц","деревню","река","деревья","домам","дверь","появлению","ночь","стол",
             "еду","ужина","кровать","шкаф","комнату"
     };
+
+    private String[] englishWords = {
+            "forest","stones","rabbit","village","river","trees","houses","door","apperance","night","table",
+            "food","dinner","bed","closet","room"
+    };
+
     private int currentPosition = 0;
     private int currentAnswer = 0;
 
@@ -81,6 +97,14 @@ public class MainActivity4 extends AppCompatActivity {
         textView = findViewById(R.id.textView);
         btnNext = findViewById(R.id.btnNext);
         btnBack = findViewById(R.id.btnBack);
+
+        // Инициализация SharedPreferences
+        sharedPreferences = getSharedPreferences("AppPrefs", MODE_PRIVATE);
+
+        // Получаем имя текущего пользователя
+        UserManager userManager = new UserManager(this);
+        String currentUsername = userManager.getCurrentUser();
+        currentUserKey = "learnedWords_" + (currentUsername != null ? currentUsername : "default");
 
         // Устанавливаем начальный текст
         updateText();
@@ -107,6 +131,7 @@ public class MainActivity4 extends AppCompatActivity {
             }
         });
     }
+
     private void check(){
         RelativeLayout backGround = findViewById(R.id.BackG);
         if (currentPosition==1 || currentPosition==5 || currentPosition==7|| currentPosition==11 || currentPosition==14
@@ -119,7 +144,6 @@ public class MainActivity4 extends AppCompatActivity {
         }
         if (currentPosition==4){
             changeBackGround(R.drawable.stoneszoom,backGround);
-
         }
         if (currentPosition==6){
             changeBackGround(R.drawable.rabbit,backGround);
@@ -142,35 +166,29 @@ public class MainActivity4 extends AppCompatActivity {
         if (currentPosition==31){
             changeBackGround(R.drawable.room,backGround);
         }
-
     }
+
     private void updateText() {
         textView.setText(texts[currentPosition]);
-
-        // Обновляем состояние кнопок
         btnBack.setEnabled(currentPosition > 0);
         btnNext.setEnabled(currentPosition < texts.length - 1);
     }
-    void showCustomDialog() {
-        // Надуваем наш XML
 
+    void showCustomDialog() {
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_answer, null);
 
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setView(dialogView) // Подключаем наш XML
+                .setView(dialogView)
                 .setPositiveButton("OK", null)
                 .setNegativeButton("Отмена", null)
                 .create();
 
-        // Получаем элементы из макета
         EditText input = dialogView.findViewById(R.id.answer_input);
         TextView error = dialogView.findViewById(R.id.error_text);
 
-        // Настройка ввода на русском языке
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         input.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
-        // Автоматическое открытие клавиатуры
         dialog.setOnShowListener(d -> {
             input.requestFocus();
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -180,25 +198,23 @@ public class MainActivity4 extends AppCompatActivity {
             okButton.setOnClickListener(v -> {
                 String userInput = input.getText().toString().trim();
 
-                if (userInput.equals(otveti[currentAnswer])) { // Замените на ваш правильный ответ
+                if (userInput.equals(otveti[currentAnswer])) {
+                    // Сохраняем слово и перевод
+                    saveLearnedWord(englishWords[currentAnswer], otveti[currentAnswer]);
+
                     currentAnswer++;
                     dialog.dismiss();
                 } else {
                     error.setVisibility(View.VISIBLE);
                     error.setText("Неверно! Попробуйте ещё раз.");
-                    // Анимация для привлечения внимания
                     error.animate()
                             .alpha(0.7f).setDuration(200)
                             .withEndAction(() -> error.animate().alpha(1f).setDuration(200))
                             .start();
-
-                    // Вибрация при ошибке
-
                 }
             });
         });
 
-        // Обработка физической клавиатуры
         input.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick();
@@ -207,7 +223,6 @@ public class MainActivity4 extends AppCompatActivity {
             return false;
         });
 
-        // Настройка размера диалога
         dialog.show();
         Window window = dialog.getWindow();
         if (window != null) {
@@ -215,29 +230,39 @@ public class MainActivity4 extends AppCompatActivity {
                     WindowManager.LayoutParams.WRAP_CONTENT);
         }
     }
-    private void changeBackGround(int Image,View targetView){
-            // Получаем текущий и новый фоны
-            Drawable currentDrawable = targetView.getBackground();
-            Drawable newDrawable = targetView.getContext().getResources().getDrawable(Image);
 
-            // Проверка на null для текущего фона
-            if (currentDrawable == null) {
-                // Если фона нет, просто устанавливаем новый
-                targetView.setBackground(newDrawable);
-                return;
-            }
+    private void saveLearnedWord(String englishWord, String russianTranslation) {
+        // Получаем текущий набор слов
+        Set<String> words = sharedPreferences.getStringSet(currentUserKey, new HashSet<>());
 
-            // Создаем TransitionDrawable
-            Drawable[] layers = new Drawable[] {
-                    currentDrawable,
-                    newDrawable
-            };
+        // Создаем новый набор, чтобы избежать проблем с мутацией
+        Set<String> newWords = new HashSet<>(words);
 
-            TransitionDrawable transition = new TransitionDrawable(layers);
+        // Добавляем новую пару слов в формате "english|russian"
+        newWords.add(englishWord + "|" + russianTranslation);
 
-            // Устанавливаем переход как новый фон
-            targetView.setBackground(transition);
+        // Сохраняем обновленный набор
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putStringSet(currentUserKey, newWords);
+        editor.apply();
+    }
 
-            // Запускаем анимацию (500 мс - стандартное время)
-            transition.startTransition(500);
-        }}
+    private void changeBackGround(int Image, View targetView) {
+        Drawable currentDrawable = targetView.getBackground();
+        Drawable newDrawable = targetView.getContext().getResources().getDrawable(Image);
+
+        if (currentDrawable == null) {
+            targetView.setBackground(newDrawable);
+            return;
+        }
+
+        Drawable[] layers = new Drawable[] {
+                currentDrawable,
+                newDrawable
+        };
+
+        TransitionDrawable transition = new TransitionDrawable(layers);
+        targetView.setBackground(transition);
+        transition.startTransition(500);
+    }
+}
