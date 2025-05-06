@@ -93,11 +93,12 @@ public class MainActivity4 extends AppCompatActivity {
 
     private int currentPosition = 0;
     private int currentAnswer = 0;
+    private int heartsCount = 3;
     private static final String SAVED_POSITION_KEY = "saved_position";
     private static final String SAVED_ANSWER_KEY = "saved_answer";
     private static final String HEARTS_COUNT_KEY = "hearts_count";
     private static final String UNLOCKED_STORIES_KEY = "unlocked_stories";
-    private int heartsCount = 3;
+
     private ImageView[] heartViews = new ImageView[3];
     private TextView heartsInfoText;
     @Override
@@ -131,7 +132,7 @@ public class MainActivity4 extends AppCompatActivity {
         updateHeartsDisplay();
         // Устанавливаем начальный текст
         updateText();
-
+        check();
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -186,7 +187,7 @@ public class MainActivity4 extends AppCompatActivity {
         if (currentPosition==4){
             changeBackGround(R.drawable.stoneszoom,backGround);
         }
-        if (currentPosition>=6 && currentPosition<10){
+        if (currentPosition==6){
             changeBackGround(R.drawable.rabbit,backGround);
         }
         if (currentPosition>=10 && currentPosition<17){
@@ -201,7 +202,7 @@ public class MainActivity4 extends AppCompatActivity {
         if (currentPosition>=27 && currentPosition<31){
             changeBackGround(R.drawable.food,backGround);
         }
-        if (currentPosition==31){
+        if (currentPosition>=31){
             changeBackGround(R.drawable.room,backGround);
 
         }
