@@ -20,6 +20,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.content.SharedPreferences;
+import android.content.Intent;
 
 import com.example.p.utils.UserManager;
 
@@ -88,6 +89,8 @@ public class MainActivity4 extends AppCompatActivity {
 
     private int currentPosition = 0;
     private int currentAnswer = 0;
+    private static final String SAVED_POSITION_KEY = "saved_position";
+    private static final String SAVED_ANSWER_KEY = "saved_answer";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +109,16 @@ public class MainActivity4 extends AppCompatActivity {
         String currentUsername = userManager.getCurrentUser();
         currentUserKey = "learnedWords_" + (currentUsername != null ? currentUsername : "default");
 
+        // Проверяем, есть ли сохраненная позиция
+        if (getIntent().hasExtra(SAVED_POSITION_KEY)) {
+            currentPosition = getIntent().getIntExtra(SAVED_POSITION_KEY, 0);
+            currentAnswer = getIntent().getIntExtra(SAVED_ANSWER_KEY, 0);
+        } else {
+            // Загружаем последнюю позицию из SharedPreferences
+            currentPosition = sharedPreferences.getInt(SAVED_POSITION_KEY, 0);
+            currentAnswer = sharedPreferences.getInt(SAVED_ANSWER_KEY, 0);
+        }
+
         // Устанавливаем начальный текст
         updateText();
 
@@ -116,6 +129,7 @@ public class MainActivity4 extends AppCompatActivity {
                     currentPosition++;
                     updateText();
                     check();
+                    saveCurrentPosition();
                 }
             }
         });
@@ -127,9 +141,25 @@ public class MainActivity4 extends AppCompatActivity {
                     currentPosition--;
                     updateText();
                     check();
+                    saveCurrentPosition();
                 }
             }
         });
+    }
+
+    private void saveCurrentPosition() {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(SAVED_POSITION_KEY, currentPosition);
+        editor.putInt(SAVED_ANSWER_KEY, currentAnswer);
+        editor.apply();
+    }
+
+    // Метод для создания Intent с текущей позицией
+    public static Intent createIntent(Context context, int currentPosition, int currentAnswer) {
+        Intent intent = new Intent(context, MainActivity4.class);
+        intent.putExtra(SAVED_POSITION_KEY, currentPosition);
+        intent.putExtra(SAVED_ANSWER_KEY, currentAnswer);
+        return intent;
     }
 
     private void check(){
@@ -145,22 +175,19 @@ public class MainActivity4 extends AppCompatActivity {
         if (currentPosition==4){
             changeBackGround(R.drawable.stoneszoom,backGround);
         }
-        if (currentPosition==6){
+        if (currentPosition>=6 && currentPosition<10){
             changeBackGround(R.drawable.rabbit,backGround);
         }
-        if (currentPosition==10){
+        if (currentPosition>=10 && currentPosition<17){
             changeBackGround(R.drawable.village,backGround);
         }
-        if (currentPosition==10){
-            changeBackGround(R.drawable.village,backGround);
-        }
-        if (currentPosition==17){
+        if (currentPosition>=17 && currentPosition<22){
             changeBackGround(R.drawable.house,backGround);
         }
-        if (currentPosition==22){
+        if (currentPosition>=22 && currentPosition<27){
             changeBackGround(R.drawable.chelovekidom,backGround);
         }
-        if (currentPosition==27){
+        if (currentPosition>=27 && currentPosition<31){
             changeBackGround(R.drawable.food,backGround);
         }
         if (currentPosition==31){
@@ -196,13 +223,14 @@ public class MainActivity4 extends AppCompatActivity {
 
             Button okButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
             okButton.setOnClickListener(v -> {
-                String userInput = input.getText().toString().trim();
+                String userInput = input.getText().toString().trim().toLowerCase();
 
                 if (userInput.equals(otveti[currentAnswer])) {
                     // Сохраняем слово и перевод
                     saveLearnedWord(englishWords[currentAnswer], otveti[currentAnswer]);
 
                     currentAnswer++;
+                    saveCurrentPosition();
                     dialog.dismiss();
                 } else {
                     error.setVisibility(View.VISIBLE);
@@ -232,16 +260,9 @@ public class MainActivity4 extends AppCompatActivity {
     }
 
     private void saveLearnedWord(String englishWord, String russianTranslation) {
-        // Получаем текущий набор слов
         Set<String> words = sharedPreferences.getStringSet(currentUserKey, new HashSet<>());
-
-        // Создаем новый набор, чтобы избежать проблем с мутацией
         Set<String> newWords = new HashSet<>(words);
-
-        // Добавляем новую пару слов в формате "english|russian"
         newWords.add(englishWord + "|" + russianTranslation);
-
-        // Сохраняем обновленный набор
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putStringSet(currentUserKey, newWords);
         editor.apply();

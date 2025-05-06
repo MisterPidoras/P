@@ -22,8 +22,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         List<history> listvb = new ArrayList<>();
-        listvb.add(new history("Haaaaawe 1", "young_adult_male", "Duncanue события 1", "Сложно", 1));
-        listvb.add(new history("Haaaaawe 2", "rectangle", "Duncanue события 2", "Легко", 2));
+        listvb.add(new history("Лесное приключение", "forest", "Вам предстоить прожить один день в лесу", "Сложно", 1));
+        listvb.add(new history("Скоро", "young_adult_male", "Скоро Скоро", "Легко", 2));
 
         setupRecyclerView(listvb);
         findViewById(R.id.settingsButton).setOnClickListener(v -> {
