@@ -57,6 +57,10 @@ public class MainActivity extends AppCompatActivity {
 
         // Для второй истории проверяем флаг
         boolean isStory2Locked = sharedPreferences.getBoolean(currentUserKey + "_story_2_locked", true);
+        boolean isStory3Locked = sharedPreferences.getBoolean(currentUserKey + "_story_3_locked", true);
+        boolean isStory4Locked = sharedPreferences.getBoolean(currentUserKey + "_story_4_locked", true);
+        boolean isStory5Locked = sharedPreferences.getBoolean(currentUserKey + "_story_5_locked", true);
+        boolean isStory6Locked = sharedPreferences.getBoolean(currentUserKey + "_story_6_locked", true);
 
         stories.add(new history(
                 "Лесное приключение",
@@ -74,6 +78,38 @@ public class MainActivity extends AppCompatActivity {
                 "Легко",
                 2,
                 isStory2Locked
+        ));
+        stories.add(new history(
+                "Мир войны",
+                "stone",
+                "Скоро Скоро",
+                "Легко",
+                3,
+                isStory3Locked
+        ));
+        stories.add(new history(
+                "Мы будем петь наслаждение",
+                "young_adult_male",
+                "Не",
+                "Невероятно",
+                4,
+                isStory4Locked
+        ));
+        stories.add(new history(
+                "История обмана",
+                "young_adult_male",
+                "Скоро Скоро",
+                "Легко",
+                5,
+                isStory5Locked
+        ));
+        stories.add(new history(
+                "Моногатари",
+                "young_adult_male",
+                "Скоро Скоро",
+                "Очень легко",
+                6,
+                isStory6Locked
         ));
 
         setupRecyclerView(stories);
