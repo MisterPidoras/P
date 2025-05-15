@@ -2,14 +2,19 @@ package com.example.p;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Message;
 import android.text.InputType;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -31,7 +36,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.p.utils.UserManager;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class MainActivity4 extends AppCompatActivity {
@@ -93,7 +101,24 @@ public class MainActivity4 extends AppCompatActivity {
             "forest","stones","rabbit","village","river","trees","houses","door","apperance","night","table",
             "food","dinner","bed","closet","room"
     };
-
+    private Map<String, Set<String>> synonyms = new HashMap<String, Set<String>>() {{
+        put("лес", new HashSet<>(Arrays.asList("лес", "бор", "чаща", "лесок")));
+        put("камни", new HashSet<>(Arrays.asList("камни", "валуны", "булыжники")));
+        put("заяц", new HashSet<>(Arrays.asList("заяц", "кролик", "зайчик")));
+        put("деревню", new HashSet<>(Arrays.asList("деревню", "село", "поселок")));
+        put("река", new HashSet<>(Arrays.asList("река", "речка", "поток")));
+        put("деревья", new HashSet<>(Arrays.asList("деревья", "растения", "стволы")));
+        put("домам", new HashSet<>(Arrays.asList("домам", "жилищам", "строениям")));
+        put("дверь", new HashSet<>(Arrays.asList("дверь", "вход", "проем")));
+        put("появлению", new HashSet<>(Arrays.asList("появлению", "возникновению", "появлению")));
+        put("ночь", new HashSet<>(Arrays.asList("ночь", "ночное время", "тьма")));
+        put("стол", new HashSet<>(Arrays.asList("стол", "столик", "трапеза")));
+        put("еду", new HashSet<>(Arrays.asList("еду", "пищу", "продукты")));
+        put("ужина", new HashSet<>(Arrays.asList("ужина", "вечерней трапезы", "еды")));
+        put("кровать", new HashSet<>(Arrays.asList("кровать", "постель", "ложе")));
+        put("шкаф", new HashSet<>(Arrays.asList("шкаф", "гардероб", "кладовка")));
+        put("комнату", new HashSet<>(Arrays.asList("комнату", "помещение", "залу")));
+    }};
     private int currentPosition = 0;
     private int currentAnswer = 0;
     private int heartsCount = 3;
@@ -230,18 +255,21 @@ public class MainActivity4 extends AppCompatActivity {
 
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setView(dialogView)
-                .setPositiveButton("OK", null)
-                .setNegativeButton("Отмена", null)
                 .create();
+
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK", (Message) null);
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Отмена", (Message) null);
+
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setDimAmount(0.7f);
+
+        }
 
         EditText input = dialogView.findViewById(R.id.answer_input);
         TextView error = dialogView.findViewById(R.id.error_text);
 
-        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-        input.setImeOptions(EditorInfo.IME_ACTION_DONE);
-
         dialog.setOnShowListener(d -> {
-            input.requestFocus();
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.showSoftInput(input, InputMethodManager.SHOW_IMPLICIT);
 
@@ -249,48 +277,79 @@ public class MainActivity4 extends AppCompatActivity {
             okButton.setOnClickListener(v -> {
                 String userInput = input.getText().toString().trim().toLowerCase();
 
-                if (userInput.equals(otveti[currentAnswer])) {
-                    // Сохраняем слово и перевод
-                    saveLearnedWord(englishWords[currentAnswer], otveti[currentAnswer]);
-
-                    currentAnswer++;
-                    saveCurrentPosition();
-                    dialog.dismiss(); // Закрываем диалог после правильного ответа
-
-                    // Продолжаем автоматически после правильного ответа
-                    if (currentPosition < texts.length - 1) {
-                        currentPosition++;
-                        updateText();
-                        check();
-                        saveCurrentPosition();
-                    }
+                if (isAnswerCorrect(userInput)) {
+                    handleCorrectAnswer(dialog);
                 } else {
                     decreaseHearts();
                     error.setVisibility(View.VISIBLE);
                     error.setText("Неверно! Попробуйте ещё раз.");
-                    error.animate()
-                            .alpha(0.7f).setDuration(200)
-                            .withEndAction(() -> error.animate().alpha(1f).setDuration(200))
-                            .start();
+
+                    if (heartsCount <= 0) {
+                        dialog.dismiss();
+                        onStoryCompleted(false);
+                    }
                 }
             });
+
+            Button cancelButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+            cancelButton.setVisibility(View.GONE);
         });
 
-        input.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick();
-                return true;
+        // Блокируем навигацию
+        btnBack.setEnabled(false);
+        btnNext.setEnabled(false);
+
+
+
+        dialog.setOnDismissListener(d -> {
+            // Если диалог закрылся, но ответ не был дан (не через handleCorrectAnswer)
+            if (currentAnswer == getOriginalAnswerForPosition(currentPosition)) {
+                // Откатываем позицию назад
+                if (currentPosition > 0) {
+                    currentPosition--;
+                    updateText();
+                    saveCurrentPosition();
+                }
             }
-            return false;
+
+            btnBack.setEnabled(currentPosition > 0);
+            btnNext.setEnabled(currentPosition < texts.length - 1);
         });
 
         dialog.show();
-        Window window = dialog.getWindow();
-        if (window != null) {
-            window.setLayout(WindowManager.LayoutParams.MATCH_PARENT,
-                    WindowManager.LayoutParams.WRAP_CONTENT);
-        }
+    }private int getOriginalAnswerForPosition(int position) {
+        if (position == 1) return 0;
+        if (position == 5) return 1;
+        if (position == 7) return 2;
+        if (position == 11) return 3;
+        if (position == 14) return 4;
+        if (position == 16) return 5;
+        if (position == 18) return 6;
+        if (position == 20) return 7;
+        if (position == 24) return 8;
+        if (position == 26) return 9;
+        if (position == 28) return 10;
+        if (position == 30) return 11;
+        if (position == 32) return 12;
+        if (position == 35) return 13;
+        if (position == 37) return 14;
+        if (position == 39) return 15;
+        return -1;
     }
+    private void handleCorrectAnswer(AlertDialog dialog) {
+        saveLearnedWord(englishWords[currentAnswer], otveti[currentAnswer]);
+        currentAnswer++;
+        saveCurrentPosition();
+        dialog.dismiss();
+
+        // Обновляем позицию только здесь
+        if (currentPosition < texts.length - 1) {
+            currentPosition++;
+            updateText();
+            check();
+            saveCurrentPosition();
+        }}
+
 
     private void saveLearnedWord(String englishWord, String russianTranslation) {
         Set<String> words = sharedPreferences.getStringSet(currentUserKey, new HashSet<>());
@@ -359,6 +418,16 @@ public class MainActivity4 extends AppCompatActivity {
     private int dpToPx(int dp) {
         return (int) (dp * getResources().getDisplayMetrics().density);
     }
+    private boolean isAnswerCorrect(String userInput) {
+        // Проверяем точный ответ
+        if (userInput.equals(otveti[currentAnswer])) {
+            return true;
+        }
+
+        // Проверяем синонимы
+        Set<String> possibleAnswers = synonyms.get(otveti[currentAnswer]);
+        return possibleAnswers != null && possibleAnswers.contains(userInput);
+    }
 
     private void updateHeartsDisplay() {
         for (int i = 0; i < heartViews.length; i++) {
@@ -377,6 +446,7 @@ public class MainActivity4 extends AppCompatActivity {
             }, 3000);
 
             btnNext.setEnabled(false);
+            btnBack.setEnabled(false);
         } else {
             heartsInfoText.setVisibility(View.GONE);
         }
